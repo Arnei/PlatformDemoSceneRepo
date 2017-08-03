@@ -1,0 +1,9 @@
+Howdy! Im Signy, Signy the sign!
+And who are you?
+...
+......
+Not the most talkative one, are we?
+Oh well,
+I guess I should teach you about controls anyways.
+You can press 'Space' to jump high. Hold the button to gain even more height!
+And that is it!
