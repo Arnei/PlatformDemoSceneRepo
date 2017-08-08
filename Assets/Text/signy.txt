@@ -6,4 +6,8 @@ Not the most talkative one, are we?
 Oh well,
 I guess I should teach you about controls anyways.
 You can press 'Space' to jump high. Hold the button to gain even more height!
+Hold 'Shift' to go really fast (But not too fast).
+Use 'Y' to detach your little friend there. You can also reattach him to you,
+but only if he's close by.
+Even when you are apart, you can use 'X' to switch views between you and him.
 And that is it!

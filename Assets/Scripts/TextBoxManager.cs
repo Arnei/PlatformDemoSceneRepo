@@ -16,6 +16,7 @@ public class TextBoxManager : MonoBehaviour {
 	public int endAtLine = -1;
 
 	public my_character_controller player;
+	private my_character_controller[] players;
 
 	public bool isActive;
 	public bool stopPlayerMovement;
@@ -23,7 +24,8 @@ public class TextBoxManager : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-		player = FindObjectOfType<my_character_controller> ();
+		//player = FindObjectOfType<my_character_controller> ();
+		players = FindObjectsOfType<my_character_controller> ();
 
 		if(textFile != null)
 		{
@@ -67,7 +69,10 @@ public class TextBoxManager : MonoBehaviour {
 
 		if(stopPlayerMovement)
 		{
-			player.canMoveText = false;
+			foreach(my_character_controller p in players){
+				p.canMoveText = false;
+			}
+			//player.canMoveText = false;
 		}
 	}
 
@@ -76,7 +81,10 @@ public class TextBoxManager : MonoBehaviour {
 		textBox.SetActive (false);
 		isActive = false;
 
-		player.canMoveText = true;
+		foreach(my_character_controller p in players){
+			p.canMoveText = true;
+		}
+		//player.canMoveText = true;
 	}
 
 	public void ReloadScript(TextAsset theText)

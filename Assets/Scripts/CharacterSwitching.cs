@@ -17,10 +17,13 @@ public class CharacterSwitching : MonoBehaviour {
 	private my_character_controller PlayerBigScript;
 	private my_character_controller PlayerSmolScript;
 
+	private Vector3 anchorPos;
+
 	// Use this for initialization
 	void Start () {
 		PlayerBigScript = PlayerBig.GetComponent<my_character_controller> ();
 		PlayerSmolScript = PlayerSmol.GetComponent<my_character_controller> ();
+		anchorPos = PlayerBig.transform.position - PlayerSmol.transform.position;
 	}
 	
 	// Update is called once per frame
@@ -55,11 +58,13 @@ public class CharacterSwitching : MonoBehaviour {
 			if(focusOnSmol)
 			{
 				switchToBig ();
+				focusOnSmol = false;
 			}
 			// If Big, switch to Smol
 			else 
 			{
 				switchToSmol ();
+				focusOnSmol = true;
 			}
 
 
@@ -104,7 +109,7 @@ public class CharacterSwitching : MonoBehaviour {
 	void retach()
 	{
 		PlayerSmol.transform.parent = PlayerBig.transform;
-		//PlayerSmol.transform = PlayerBig.transform + new Vector3(0,1,0);
+		PlayerSmol.transform.position = PlayerBig.transform.position - anchorPos;
 	}
 
 	void switchToSmol()

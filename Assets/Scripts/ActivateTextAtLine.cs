@@ -26,7 +26,7 @@ public class ActivateTextAtLine : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		
 		// To avoid skipping line 1 if both Start and Skip command is Return
 		if(oneFrameLater)
 		{
@@ -39,6 +39,7 @@ public class ActivateTextAtLine : MonoBehaviour {
 			!theTextBox.isActive)
 		{
 			oneFrameLater = true;
+			waitForPress = false;
 		}
 	}
 
