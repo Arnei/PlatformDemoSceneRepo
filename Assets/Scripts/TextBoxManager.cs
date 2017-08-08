@@ -67,7 +67,7 @@ public class TextBoxManager : MonoBehaviour {
 
 		if(stopPlayerMovement)
 		{
-			player.canMove = false;
+			player.canMoveText = false;
 		}
 	}
 
@@ -76,7 +76,7 @@ public class TextBoxManager : MonoBehaviour {
 		textBox.SetActive (false);
 		isActive = false;
 
-		player.canMove = true;
+		player.canMoveText = true;
 	}
 
 	public void ReloadScript(TextAsset theText)

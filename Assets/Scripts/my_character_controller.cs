@@ -18,7 +18,8 @@ public class my_character_controller : MonoBehaviour
 	public float continueJumping = 1.0F;				// How long the character can continue to gain height
 	public float gravity = 20.0F;						// How fast the character comes back down
 	public float maxGravity = 20.0F;					// Max Fall Speed
-	public bool canMove = true;
+	public bool canMoveStart = true;
+	public bool canMoveText = true;
 	public string movementType = "NormalMovement";
 
 	private float lastFrameJumpSpeed;					// Stores Y-Direction from last frame
@@ -41,10 +42,11 @@ public class my_character_controller : MonoBehaviour
 
 	void Update()
 	{
-		if(!canMove)
-		{
+		if (!canMoveText)
 			return;
-		}
+		if (!canMoveStart)
+			return;
+
 			
 		if (movementType == "ClimbMovement" && Input.GetButton ("Jump"))
 			ClimbMovement ();
@@ -55,6 +57,42 @@ public class my_character_controller : MonoBehaviour
 
 	void ClimbMovement()
 	{
+		float horizontal = Input.GetAxis("Horizontal");
+		float vertical = Input.GetAxis ("Vertical");
+
+		moveDirection = Vector3.zero;
+
+		// If moving forward
+		if(vertical > 0)
+		{
+			moveDirection.y = vertical;
+			moveDirection.z = vertical;	//Also move forward to cling to wall
+		}
+		// If moving backwards
+		else if(vertical < 0)
+		{
+			if(controller.isGrounded)
+			{
+				moveDirection.z = vertical; 	//Get away from the wall
+			}
+			else
+			{
+				moveDirection.y = vertical;
+			}
+		}
+		// Horizontal Movement
+		moveDirection.x = horizontal;
+
+		// The Rest
+		moveDirection = transform.TransformDirection(moveDirection);
+		CalcCurrentSpeed ();
+		moveDirection *= currentSpeed;
+
+		controller.Move(moveDirection * Time.deltaTime);
+
+
+		/**
+		 * 
 		Vector3 transformBottom = transform.position;
 		transformBottom.y = transformBottom.y - Mathf.Abs(transform.localScale.y);
 		Ray forward = new Ray (transformBottom, transform.forward);
@@ -84,7 +122,7 @@ public class my_character_controller : MonoBehaviour
 		else{
 			NormalMovement ();
 		}
-
+		*/
 
 
 
@@ -182,6 +220,7 @@ public class my_character_controller : MonoBehaviour
 	}
 
 
+
 	void OnTriggerEnter(Collider collider)
 	{
 		// Teleport back to start
@@ -189,5 +228,51 @@ public class my_character_controller : MonoBehaviour
 		{
 			transform.position = new Vector3 (1, 1, 1);
 		}
+
+		// Climbing
+		if (collider.tag == "Climbable")
+		{
+			print ("Climbing");
+			movementType = "ClimbMovement";
+			// Finds the point on the collider that is closest to us
+
+			transform.LookAt (collider.ClosestPointOnBounds (transform.position));
+			Debug.DrawLine (transform.position, collider.ClosestPointOnBounds (transform.position), Color.red, 2, false);
+
+			// As we need only the y rotation
+			Quaternion temp = transform.rotation;
+			temp.eulerAngles = new Vector3 (0, transform.rotation.eulerAngles.y, 0);
+			transform.rotation = temp;
+		}
 	}
+
+	/**
+	void OnTriggerStay(Collider collider)
+	{
+		// Climbing
+		if (collider.tag == "Climbable")
+		{
+			// Finds the point on the collider that is closest to us
+			transform.LookAt (collider.ClosestPointOnBounds (transform.position));
+			Debug.DrawLine (transform.position, collider.ClosestPointOnBounds (transform.position), Color.red, 2, false);
+
+			// As we need only the y rotation
+			Quaternion temp = transform.rotation;
+			temp.eulerAngles = new Vector3 (0, transform.rotation.eulerAngles.y, 0);
+			transform.rotation = temp;
+		}
+	}
+	*/
+
+
+	void OnTriggerExit(Collider collider)
+	{
+		// Stop Climbing
+		if(collider.tag == "Climbable")
+		{
+			print ("Not Climbing");
+			movementType = "NormalMovement";
+		}
+	}
+
 }
