@@ -15,7 +15,7 @@ public class TextBoxManager : MonoBehaviour {
 	public int currentLine = 0;
 	public int endAtLine = -1;
 
-	public my_character_controller player;
+	//public my_character_controller player;
 	private my_character_controller[] players;
 
 	public bool isActive;

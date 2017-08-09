@@ -5,7 +5,7 @@ using System.Collections;
 [RequireComponent(typeof(CharacterController))]
 public class my_character_controller : MonoBehaviour 
 {
-	public CharacterController controller;
+	private CharacterController controller;
 
 	public float speed = 6.0F;							// Standard Character Speed
 	public float runSpeed = 12.0F;						// Speed when pressing Run-Button (Shift)
@@ -18,9 +18,11 @@ public class my_character_controller : MonoBehaviour
 	public float continueJumping = 1.0F;				// How long the character can continue to gain height
 	public float gravity = 20.0F;						// How fast the character comes back down
 	public float maxGravity = 20.0F;					// Max Fall Speed
-	public bool canMoveStart = true;
-	public bool canMoveText = true;
-	public string movementType = "NormalMovement";
+	public bool canMoveStart = true;					// Used by CharacterSwitching
+	public bool canMoveText = true;						// Used by TextBoxManager
+	public string movementType = "NormalMovement";		// To switch between different movement options. Currently there is only NormalMovement and ClimbMovement
+
+
 
 	private float lastFrameJumpSpeed;					// Stores Y-Direction from last frame
 	private bool hasJumped;								// Did we jump just now?
@@ -54,6 +56,7 @@ public class my_character_controller : MonoBehaviour
 			NormalMovement ();
 
 	}
+		
 
 	void ClimbMovement()
 	{
@@ -153,6 +156,12 @@ public class my_character_controller : MonoBehaviour
 		// Need to remember the jumpspeed from before for smooth jumping
 		moveDirection.y = lastFrameJumpSpeed;		
 
+		// Gravity
+		if (moveDirection.y < maxGravity)
+			moveDirection.y -= gravity * Time.deltaTime;
+		else
+			moveDirection.y = maxGravity;
+		
 		if (controller.isGrounded) 
 		{		
 			// Stop Gravity from going to negative infinity while grounded
@@ -176,11 +185,7 @@ public class my_character_controller : MonoBehaviour
 			continueJumpingRemainingTime = continueJumping;
 		}
 
-		// Gravity
-		if (moveDirection.y < maxGravity)
-			moveDirection.y -= gravity * Time.deltaTime;
-		else
-			moveDirection.y = maxGravity;
+
 
 		lastFrameJumpSpeed = moveDirection.y;
 
