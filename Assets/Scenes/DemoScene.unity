@@ -178,6 +178,8 @@ GameObject:
   - component: {fileID: 58040184}
   - component: {fileID: 58040183}
   - component: {fileID: 58040182}
+  - component: {fileID: 58040187}
+  - component: {fileID: 58040186}
   m_Layer: 0
   m_Name: Main Camera (1)
   m_TagString: MainCamera
@@ -255,6 +257,32 @@ Camera:
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
   m_StereoMirrorMode: 0
+--- !u!114 &58040186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 58040180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c06d0dc17530e41a77ee35b9dc3774, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1322837021}
+  minimumDistance: 1
+  lerpSpeed: 1
+--- !u!65 &58040187
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 58040180}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 0.25, y: 0.25, z: 0.25}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &66118557
 GameObject:
   m_ObjectHideFlags: 0
@@ -4556,7 +4584,7 @@ GameObject:
   - component: {fileID: 1153961031}
   m_Layer: 0
   m_Name: MiniCamera (1)
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

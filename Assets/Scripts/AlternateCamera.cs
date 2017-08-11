@@ -16,7 +16,7 @@ public class AlternateCamera : MonoBehaviour {
 	private float tempWaitUntilAutoRotate;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		myCamera = GetComponentInChildren<Camera> ();
 
 		transform.position = player.transform.position;
