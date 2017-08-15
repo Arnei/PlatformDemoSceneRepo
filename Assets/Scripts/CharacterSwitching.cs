@@ -17,12 +17,17 @@ public class CharacterSwitching : MonoBehaviour {
 	private my_character_controller PlayerBigScript;
 	private my_character_controller PlayerSmolScript;
 
+	private CharacterController PlayerBigController;
+	private CharacterController PlayerSmolController;
+
 	private Vector3 anchorPos;
 
 	// Use this for initialization
 	void Start () {
 		PlayerBigScript = PlayerBig.GetComponent<my_character_controller> ();
 		PlayerSmolScript = PlayerSmol.GetComponent<my_character_controller> ();
+		PlayerBigController = PlayerBig.GetComponent<CharacterController> ();
+		PlayerSmolController = PlayerSmol.GetComponent<CharacterController> ();
 		anchorPos = PlayerBig.transform.position - PlayerSmol.transform.position;
 	}
 	
@@ -112,22 +117,28 @@ public class CharacterSwitching : MonoBehaviour {
 		PlayerSmol.transform.position = PlayerBig.transform.position - anchorPos;
 	}
 
+	// Make necessary enables and disables
+	// CharacterController need to be disabled, else bugs can happen (like invisible colliders remaining in the scense)
 	void switchToSmol()
 	{
 		PlayerBigCamera.enabled = false;
-		PlayerSmolCamera.enabled = true;
-
 		PlayerBigScript.canMoveStart = false;
+		PlayerBigController.enabled = false;
+
+		PlayerSmolCamera.enabled = true;
 		PlayerSmolScript.canMoveStart = true;
+		PlayerSmolController.enabled = true;
 	}
 
 	void switchToBig()
 	{
 		PlayerSmolCamera.enabled = false;
-		PlayerBigCamera.enabled = true;
-
 		PlayerSmolScript.canMoveStart = false;
+		PlayerSmolController.enabled = false;
+
+		PlayerBigCamera.enabled = true;
 		PlayerBigScript.canMoveStart = true;
+		PlayerBigController.enabled = true;
 	}
 
 }

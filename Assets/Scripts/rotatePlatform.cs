@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * Simple script that rotates an object around itself
+ */
 public class rotatePlatform : MonoBehaviour {
 
 	public float rotateSpeed = 1.0F;

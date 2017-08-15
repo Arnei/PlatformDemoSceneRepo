@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * To be placed on climbable objects.
+ * The objects need a trigger collider around them, in which the player will be able to climb.
+ */
 public class EnableClimbZone : MonoBehaviour {
 
 	public my_character_controller player;

@@ -2,18 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * Goes beyond a simple follower camera.
+ * Script to be attached to an empty game object, with a camera as a child. 
+ * The empty game object will be moved to player position, and follow the player position,
+ * but will not follow the players rotation, allowing for more control of the rotation.
+ */
 public class AlternateCamera : MonoBehaviour {
 
-	public GameObject player;
+	public GameObject player;						// Player the EGO will be following
 
-	// Camera Things
+	public float rotateSpeed = 3.0F;				// How fast the camera rotates by hand
+	public float autoRotateSpeedDecrease = 10.0F;	// Decreases speed if automatic rotation (if >1)
+	public float waitUntilAutoRotate = 1.0F;		// Time to wait until camera readjust itself
+
 	private Camera myCamera;
-	public float rotateSpeed = 3.0F;
-	public float autoRotateSpeedDecrease = 10.0F;
-	public float waitUntilAutoRotate = 1.0F;
 
-	private bool justRotatedByHand = false;
-	private float tempWaitUntilAutoRotate;
+	private bool justRotatedByHand = false;			// Used by the Timer
+	private float tempWaitUntilAutoRotate;			// Used by the Timer
 
 	// Use this for initialization
 	void Awake () {
@@ -25,6 +31,7 @@ public class AlternateCamera : MonoBehaviour {
 	
 	// Update is called once per frame
 	void LateUpdate () {
+		// Timer checking if the camera was recently rotated by hand
 		if (justRotatedByHand && (Input.GetAxis ("Vertical") != 0.0F))
 		{
 			tempWaitUntilAutoRotate = tempWaitUntilAutoRotate - Time.deltaTime;
@@ -44,18 +51,19 @@ public class AlternateCamera : MonoBehaviour {
 		else
 			cameraHorizontal = Vector3.zero;
 
-
+		// Rotate by hand 
 		if(cameraHorizontal != Vector3.zero)
 		{
 			transform.Rotate (cameraHorizontal * rotateSpeed);
 			justRotatedByHand = true;
 			tempWaitUntilAutoRotate = waitUntilAutoRotate;
 		}
+		// Automatically rotate to align rotation with player rotation
+		// after a defined time and if the camera wasn't just manually manipulated
 		else if(!justRotatedByHand)
 		{
 			// Calc the angle between the looking direction of the player and this object
 			float forwardAngle = Vector3.SignedAngle (myCamera.transform.forward, player.transform.forward, Vector3.up);
-
 			// Rotationspeed Modifier based on angle size (the remaining amount that still needs to be rotated)
 			float autoRotateSpeed = Mathf.Abs(forwardAngle / autoRotateSpeedDecrease);
 			// Rotate

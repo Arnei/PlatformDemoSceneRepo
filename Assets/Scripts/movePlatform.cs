@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * Moves a platform along x and z axis from starting position
+ * Moves evenly along one axis, meaning that if it goes 5 units in x direction, it will go -5 units as well
+ */
 public class movePlatform : MonoBehaviour {
 
 	public float xSpeed = 0.1F;
