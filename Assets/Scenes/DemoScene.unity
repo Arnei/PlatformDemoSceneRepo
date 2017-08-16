@@ -1891,7 +1891,6 @@ GameObject:
   - component: {fileID: 545064067}
   - component: {fileID: 545064065}
   - component: {fileID: 545064066}
-  - component: {fileID: 545064064}
   - component: {fileID: 545064063}
   m_Layer: 0
   m_Name: Climbable Wall
@@ -1912,18 +1911,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &545064064
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 545064062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 451382466b2cd024685285c7f55f6391, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 1322837027}
 --- !u!23 &545064065
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2038,7 +2025,6 @@ GameObject:
   - component: {fileID: 575890856}
   - component: {fileID: 575890854}
   - component: {fileID: 575890858}
-  - component: {fileID: 575890859}
   - component: {fileID: 575890860}
   m_Layer: 0
   m_Name: Climbable Pillar
@@ -2112,18 +2098,6 @@ CapsuleCollider:
   m_Height: 2.703868
   m_Direction: 1
   m_Center: {x: 0.000000047683717, y: 0.013205242, z: -0.00000009536743}
---- !u!114 &575890859
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 575890853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 451382466b2cd024685285c7f55f6391, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 1322837027}
 --- !u!64 &575890860
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -4307,6 +4281,7 @@ MonoBehaviour:
   continueJumping: 1
   gravity: 10
   maxGravity: 20
+  mymaterial: {fileID: 0}
 --- !u!143 &1082700136
 CharacterController:
   m_ObjectHideFlags: 0
@@ -5473,7 +5448,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1322837021}
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 12.29, y: 7.27, z: 67.66}
   m_LocalScale: {x: 0.5000005, y: 0.75, z: 0.5000005}
   m_Children:
   - {fileID: 1264074497}
@@ -5507,6 +5482,7 @@ MonoBehaviour:
   continueJumping: 0.25
   gravity: 20
   maxGravity: 20
+  mymaterial: {fileID: 2100000, guid: 637a3524db7017d4c90519f859f19a2e, type: 2}
 --- !u!54 &1322837028
 Rigidbody:
   m_ObjectHideFlags: 0

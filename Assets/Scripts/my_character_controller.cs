@@ -34,8 +34,6 @@ public class my_character_controller : MonoBehaviour
 	private float continueJumpingRemainingTime;			// Counts remaining time to gain height
 
 
-
-
 	void Start()
 	{
 		controller = GetComponent<CharacterController>();
@@ -74,6 +72,22 @@ public class my_character_controller : MonoBehaviour
 
 		moveDirection = Vector3.zero;
 
+		// Raycast from player bottom
+		// If hit, rotate towards the normal of the collider
+		Vector3 transformBottom = transform.position;
+		transformBottom.y = transformBottom.y - Mathf.Abs(transform.localScale.y);
+		Ray forward = new Ray (transformBottom, transform.forward);
+		RaycastHit hit;
+		if (Physics.Raycast (forward, out hit, 100)) {
+			Debug.DrawLine (forward.origin, hit.point, Color.red);
+			if (hit.collider.gameObject.tag == "Climbable") {
+
+				var targetRotation = Quaternion.LookRotation (-hit.normal);
+				transform.rotation = Quaternion.Slerp (transform.rotation, targetRotation, Time.deltaTime * 2.0F);
+
+			}
+		}
+
 		// If moving forward
 		if(vertical > 0)
 		{
@@ -97,14 +111,18 @@ public class my_character_controller : MonoBehaviour
 
 		// The Rest
 		moveDirection = transform.TransformDirection(moveDirection);
-		CalcCurrentSpeed ();
-		moveDirection *= currentSpeed;
+
+		// CalcCurrentSpeed won't work for climbing, as it requires the player to move forward
+		//CalcCurrentSpeed ();
+		//moveDirection *= currentSpeed;
+		moveDirection *= 2.0F;
 
 		controller.Move(moveDirection * Time.deltaTime);
 
 
 		/**
 		 * 
+		// Attempt at rotating player correctly by raycasting
 		Vector3 transformBottom = transform.position;
 		transformBottom.y = transformBottom.y - Mathf.Abs(transform.localScale.y);
 		Ray forward = new Ray (transformBottom, transform.forward);
@@ -120,12 +138,12 @@ public class my_character_controller : MonoBehaviour
 				transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2.0F);
 
 
-				CalcCurrentSpeed ();
+				//CalcCurrentSpeed ();
 
 				moveDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
 				moveDirection = transform.TransformDirection(moveDirection);
 
-				moveDirection *= currentSpeed;
+				//moveDirection *= currentSpeed;
 
 				controller.Move(moveDirection * Time.deltaTime);
 
@@ -246,8 +264,9 @@ public class my_character_controller : MonoBehaviour
 		{
 			print ("Climbing");
 			movementType = "ClimbMovement";
-			// Finds the point on the collider that is closest to us
 
+			/**
+			// Finds the point on the collider that is closest to us
 			transform.LookAt (collider.ClosestPointOnBounds (transform.position));
 			Debug.DrawLine (transform.position, collider.ClosestPointOnBounds (transform.position), Color.red, 2, false);
 
@@ -255,6 +274,7 @@ public class my_character_controller : MonoBehaviour
 			Quaternion temp = transform.rotation;
 			temp.eulerAngles = new Vector3 (0, transform.rotation.eulerAngles.y, 0);
 			transform.rotation = temp;
+			*/
 		}
 	}
 
