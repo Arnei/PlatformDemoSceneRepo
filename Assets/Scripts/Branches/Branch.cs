@@ -9,7 +9,7 @@ using UnityEngine;
 public class Branch : MonoBehaviour {
 
 	public float maxLength = 10.0F;		// Maximum Length the branch can have (in unity units)
-	public float growSpeed = 0.1F;		// Manipulates the speed at which the branch scales		
+	public float growSpeed = 1.0F;		// Manipulates the speed at which the branch scales		
 
 	private Vector3 rescale;			// Holds the final scale we want to achieve
 
@@ -25,9 +25,9 @@ public class Branch : MonoBehaviour {
 		transform.position = new Vector3(transform.position.x, transform.position.y - (objHeight / 3.0F), transform.position.z);	// Literally hacked the constant here
 
 		// Check if we wanna grow shorter than maxLength
-		Debug.Log ("Old MaxLength: " + maxLength);
+		//Debug.Log ("Old MaxLength: " + maxLength);
 		maxLength = checkForGoal (maxLength, objHeight);
-		Debug.Log ("New MaxLength: " + maxLength);
+		//Debug.Log ("New MaxLength: " + maxLength);
 
 		// MeshRenderer.bounds returns the size of the axis-aligned bounding box.
 		// This is then used to calculate the corresponding scale value to maxLength.
@@ -37,9 +37,9 @@ public class Branch : MonoBehaviour {
 		transform.rotation = Quaternion.identity;
 		float size = branchObject.GetComponent<MeshRenderer> ().bounds.size.z;
 		transform.rotation = tempRot;
-		Debug.Log ("Size: " + size);
+		//Debug.Log ("Size: " + size);
 		rescale = transform.localScale;
-		Debug.Log ("Rescale:" + rescale);
+		//Debug.Log ("Rescale:" + rescale);
 		rescale.z = maxLength * rescale.z / size;		// The goal scale
 	}
 

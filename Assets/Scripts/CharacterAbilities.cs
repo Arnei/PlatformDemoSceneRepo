@@ -10,6 +10,9 @@ using UnityEngine;
 public class CharacterAbilities : MonoBehaviour {
 	
 	public Transform branch;
+	public Transform ivy;
+
+	public float ivyRaycastDistance = 5.0F;
 
 	private CharacterController controller;		
 
@@ -25,6 +28,11 @@ public class CharacterAbilities : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.Alpha1) && controller.isGrounded)
 		{
 			growBranch ();
+		}
+
+		if(Input.GetKeyDown(KeyCode.Alpha2))
+		{
+			growIvy ();
 		}
 	}
 
@@ -49,4 +57,29 @@ public class CharacterAbilities : MonoBehaviour {
 
 		Instantiate (branch, startPosition, startRotation);
 	}
+
+	void growIvy()
+	{
+		RaycastHit hit;
+		if(Physics.Raycast(transform.position, transform.forward, out hit, ivyRaycastDistance)){
+
+
+			Vector3 startPos = hit.point;
+			Quaternion startRot = hit.collider.gameObject.transform.rotation;
+
+			Vector3 endPos = hit.point + new Vector3 (0, 2.0F, 0);
+
+			Transform newIvy = Instantiate (ivy, startPos, startRot);
+
+			float verySmallNumber = 0.01F;
+			newIvy.transform.position = newIvy.transform.position + (newIvy.transform.forward * verySmallNumber);
+
+			GrowIvy growIvyScript = newIvy.GetComponent<GrowIvy> ();
+			growIvyScript.setEndPos (endPos);
+			growIvyScript.setRaycastHit (hit.collider.gameObject.GetComponent<MeshFilter>().sharedMesh.bounds);
+
+		}
+	}
+
+
 }
