@@ -11,7 +11,7 @@ public class CharacterSwitching : MonoBehaviour {
 
 	public float distanceFromBig = 5.0F;
 
-	private bool together = true;
+	public bool together = true;
 	private bool focusOnSmol = false;
 
 	private my_character_controller PlayerBigScript;
@@ -106,7 +106,7 @@ public class CharacterSwitching : MonoBehaviour {
 		return false;
 	}
 
-	void detach()
+	public void detach()
 	{
 		PlayerSmol.transform.parent = null;
 	}

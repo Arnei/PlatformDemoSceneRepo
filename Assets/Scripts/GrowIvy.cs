@@ -7,7 +7,6 @@ public class GrowIvy : MonoBehaviour {
 	public float growSpeed = 1.0F;
 
 
-	private Vector3 stopHere;
 	private Bounds hitWallBounds;
 	private Vector3 rescale;
 
@@ -45,10 +44,7 @@ public class GrowIvy : MonoBehaviour {
 		transform.localScale = Vector3.MoveTowards (transform.localScale, rescale, (growSpeed * Time.deltaTime));
 	}
 
-	public void setEndPos(Vector3 endPos)
-	{
-		stopHere = endPos;
-	}
+
 	public void setRaycastHit(Bounds hit)
 	{
 		hitWallBounds = hit;
