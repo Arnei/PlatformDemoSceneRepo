@@ -58,8 +58,8 @@ public class MouseCamera : MonoBehaviour {
 	public float MaxViewDistance = 15f;
 	public float MinViewDistance = 1f;
 	public int ZoomRate = 20;
-	private int lerpRate = 5;
-	private float distance = 3f;
+	//private int lerpRate = 5;
+	public float distance = 3f;
 	private float desireDistance;
 	private float correctedDistance;
 	private float currentDistance;
@@ -108,12 +108,18 @@ public class MouseCamera : MonoBehaviour {
 		RaycastHit collisionHit;
 		Vector3 cameraTargetPosition = new Vector3 (CameraTarget.position.x, CameraTarget.position.y + cameraTargetHeight, CameraTarget.position.z);
 
-		bool isCorrected = false;
-		if (Physics.Linecast (cameraTargetPosition, position, out collisionHit)) {
-			position = collisionHit.point;
-			correctedDistance = Vector3.Distance(cameraTargetPosition,position);
-			isCorrected = true;
+		// If Height is lower, weird shit happens
+		if(cameraTargetHeight > 0.5F)
+		{
+			bool isCorrected = false;
+			if (Physics.Linecast (cameraTargetPosition, position, out collisionHit)) {
+				Debug.DrawLine (cameraTargetPosition, collisionHit.point, Color.red);
+				position = collisionHit.point;
+				correctedDistance = Vector3.Distance(cameraTargetPosition,position);
+				isCorrected = true;
+			}
 		}
+
 			
 
 		currentDistance = !isCorrected || correctedDistance > currentDistance ? Mathf.Lerp(currentDistance,correctedDistance,Time.deltaTime * ZoomRate) : correctedDistance;

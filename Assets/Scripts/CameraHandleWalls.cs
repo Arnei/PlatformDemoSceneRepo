@@ -16,13 +16,47 @@ public class CameraHandleWalls : MonoBehaviour {
 	private float maxDistance;				// Maximum possible distance from player. Based on position in scene.
 	private float rayMaxDistance;			// Maximum possible distance the ray can go
 
+	private Vector3 playerPos;
+	private Vector3 cameraPos;
+	private Vector3 goalPos;
+
 
 	// Use this for initialization
 	void Start () {
-		maxDistance = Vector3.Distance (player.transform.position, transform.position);
+		playerPos = player.transform.position;
+		cameraPos = transform.position;
+
+		maxDistance = Vector3.Distance (playerPos, cameraPos);
 		rayMaxDistance = maxDistance; //+ 1.0F;
+
+
 	}
-	
+
+	// Update is called once per frame
+	void LateUpdate () {
+		playerPos = player.transform.position;
+		cameraPos = transform.position;
+		goalPos = transform.position;
+
+		// Send a raycast in camera direction. If there is a hit, position the camera at the hit point, so that it does not go through walls etc.
+		Ray ray = new Ray(playerPos, (cameraPos - playerPos));
+		RaycastHit hit;
+		if(Physics.Raycast(ray, out hit, rayMaxDistance))
+		{
+			Debug.DrawLine (cameraPos, hit.point, Color.red);
+			if(hit.distance < maxDistance)
+				goalPos = hit.point;
+
+		}
+		// Reset to maxDistance if there is no obstacle
+		else if(Vector3.Distance (playerPos, cameraPos) < maxDistance)
+		{
+			Vector3 reset = ray.GetPoint (maxDistance);
+			goalPos = Vector3.MoveTowards (cameraPos, reset, lerpBackSpeed * Time.deltaTime);
+		}
+	}
+
+	/**
 	// Update is called once per frame
 	void Update () {
 
@@ -42,63 +76,8 @@ public class CameraHandleWalls : MonoBehaviour {
 			Vector3 reset = ray.GetPoint (maxDistance);
 			transform.position = Vector3.MoveTowards (transform.position, reset, lerpBackSpeed * Time.deltaTime);
 		}
-
-
 	}
-
+	*/
 
 
 }
-
-// DEAD CODE. To be removed eventually
-
-
-/**
-		if(noTrigger)
-		{
-			bool done = moveAway ();
-			if (done)
-			{
-				noTrigger = false;
-			}
-		}
-		*/
-
-/**
-	void OnTriggerEnter(Collider other)
-	{
-		moveCloser ();
-	}
-
-	void OnTriggerStay(Collider other)
-	{
-		moveCloser ();
-	}
-
-	void OnTriggerExit(Collider other)
-	{
-		noTrigger = true;
-	}
-
-	void moveCloser()
-	{
-		// Direction from player to camera
-		Vector3 direction = transform.position - player.transform.position;
-		Vector3 minDistPos = player.transform.position + (direction.normalized * minimumDistance);
-
-		transform.position = Vector3.Lerp (transform.position, minDistPos, lerpSpeed * Time.deltaTime);
-	}
-
-	bool moveAway()
-	{
-		Vector3 direction = transform.position - player.transform.position;
-		Vector3 maxDistPos = player.transform.position + (direction.normalized * maxDistance);
-
-		transform.position = Vector3.Lerp (transform.position, maxDistPos, lerpSpeed * Time.deltaTime);
-
-		if (maxDistance >= Vector3.Distance (player.transform.position, transform.position))
-			return false;
-		else
-			return true;
-	}
-	*/
