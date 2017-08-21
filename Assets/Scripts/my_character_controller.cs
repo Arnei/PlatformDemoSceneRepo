@@ -10,7 +10,8 @@ public class my_character_controller : MonoBehaviour
 	// General variables
 	public bool canMoveStart = true;					// Used by CharacterSwitching
 	public bool canMoveText = true;						// Used by TextBoxManager
-	public string movementType = "NormalMovement";		// To switch between different movement options. Currently there is only NormalMovement and ClimbMovement
+	public string movementType = "NormalMovement";		// To switch between diffrent movement options. Currently there is only NormalMovement and ClimbMovement
+	public bool horizontalMoveSideways = false;
 
 	// Moving variables
 	public float speed = 6.0F;							// Standard Max Character Speed
@@ -19,6 +20,7 @@ public class my_character_controller : MonoBehaviour
 	public float runAccelerationSpeed = 1.0F;			// Same as above, but for run speed
 	public float decelerationSpeed = 1.0F;				// How fast the character will stop
 	public float rotateSpeed = 3.0F;					// Standard Rotate Speed
+	public float moveSidewaysSpeed = 4.0F;
 
 	private float currentSpeed;							// Used by the function CalcCurrrentSpeed as a global return value
 	private Vector3 moveDirection = Vector3.zero;		// Direction Vector for character movement. Reset each frame!
@@ -161,13 +163,17 @@ public class my_character_controller : MonoBehaviour
 	// Move player around with WASD and jump with Space
 	void NormalMovement()
 	{
+		moveDirection = new Vector3 (0, 0, 0);
 		// Calculate Speed 
 		CalcCurrentSpeed();
 
 		// Rotation
-		transform.Rotate(0, Input.GetAxis("Horizontal") * rotateSpeed, 0);
+		if (!horizontalMoveSideways)
+			transform.Rotate (0, Input.GetAxis ("Horizontal") * rotateSpeed, 0);
+		else
+			moveDirection.x = Input.GetAxis ("Horizontal");
 		// Movement
-		moveDirection = new Vector3(0, 0, Input.GetAxis("Vertical"));
+		moveDirection.z = Input.GetAxis("Vertical");
 		moveDirection = transform.TransformDirection(moveDirection);
 		// Alter by speed
 		moveDirection *= currentSpeed;
@@ -219,34 +225,48 @@ public class my_character_controller : MonoBehaviour
 	// Implements running (Shift)
 	void CalcCurrentSpeed()
 	{
-		// If running
-		if(Input.GetKey(KeyCode.LeftShift))
+		bool movinSideways = false;
+		float curAccSpeed;
+		float topSpeed;
+
+		if (horizontalMoveSideways && Input.GetAxis ("Vertical") == 0 && Input.GetAxis ("Horizontal") != 0)
+			movinSideways = true;
+
+		// If only moving sideways
+		if(movinSideways)
 		{
-			if(Input.GetAxis("Vertical") != 0 && currentSpeed < runSpeed)
-			{
-				currentSpeed = currentSpeed + runAccelerationSpeed * Time.deltaTime;
-			}
-			else 
-			{
-				if (currentSpeed > 0)
-					currentSpeed = currentSpeed - decelerationSpeed * Time.deltaTime;
-				else
-					currentSpeed = 0;
-			}
-		// Not running
-		} else {
-			if(Input.GetAxis("Vertical") != 0 && currentSpeed < speed)
-			{
-				currentSpeed = currentSpeed + accelerationSpeed * Time.deltaTime;
-			}
-			else
-			{
-				if (currentSpeed > 0)
-					currentSpeed = currentSpeed - decelerationSpeed * Time.deltaTime;
-				else
-					currentSpeed = 0;
-			}
+			topSpeed = moveSidewaysSpeed;
+			curAccSpeed = 0.0F;
 		}
+		// If running
+		else if (Input.GetKey (KeyCode.LeftShift))
+		{
+			curAccSpeed = runAccelerationSpeed;
+			topSpeed = runSpeed;
+		}
+		// Not running
+		else
+		{
+			topSpeed = speed;
+			curAccSpeed = accelerationSpeed;
+		}
+
+
+		// If moving
+		if((Input.GetAxis("Vertical") != 0 || movinSideways) && currentSpeed < topSpeed)
+		{
+			currentSpeed = currentSpeed + curAccSpeed * Time.deltaTime;
+		}
+		// Not moving
+		else 
+		{
+			if (currentSpeed > 0)
+				currentSpeed = currentSpeed - decelerationSpeed * Time.deltaTime;
+			else
+				currentSpeed = 0;
+		}
+
+
 	}
 
 
