@@ -12,7 +12,7 @@ public class CharacterSwitching : MonoBehaviour {
 	public float distanceFromBig = 5.0F;
 
 	public bool together = true;
-	private bool focusOnSmol = false;
+	public bool focusOnSmol = false;
 
 	private my_character_controller PlayerBigScript;
 	private my_character_controller PlayerSmolScript;
@@ -140,5 +140,6 @@ public class CharacterSwitching : MonoBehaviour {
 		PlayerBigScript.canMoveStart = true;
 		PlayerBigController.enabled = true;
 	}
+		
 
 }

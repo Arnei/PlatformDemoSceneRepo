@@ -54,6 +54,8 @@ public class CameraHandleWalls : MonoBehaviour {
 			Vector3 reset = ray.GetPoint (maxDistance);
 			goalPos = Vector3.MoveTowards (cameraPos, reset, lerpBackSpeed * Time.deltaTime);
 		}
+
+		transform.position = goalPos;
 	}
 
 	/**

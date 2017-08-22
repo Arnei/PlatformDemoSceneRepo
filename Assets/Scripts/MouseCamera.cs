@@ -108,10 +108,10 @@ public class MouseCamera : MonoBehaviour {
 		RaycastHit collisionHit;
 		Vector3 cameraTargetPosition = new Vector3 (CameraTarget.position.x, CameraTarget.position.y + cameraTargetHeight, CameraTarget.position.z);
 
+		bool isCorrected = false;
 		// If Height is lower, weird shit happens
 		if(cameraTargetHeight > 0.5F)
 		{
-			bool isCorrected = false;
 			if (Physics.Linecast (cameraTargetPosition, position, out collisionHit)) {
 				Debug.DrawLine (cameraTargetPosition, collisionHit.point, Color.red);
 				position = collisionHit.point;

@@ -21,9 +21,11 @@ public class my_character_controller : MonoBehaviour
 	public float decelerationSpeed = 1.0F;				// How fast the character will stop
 	public float rotateSpeed = 3.0F;					// Standard Rotate Speed
 	public float moveSidewaysSpeed = 4.0F;
+	public float moveSidewaysAccelerationSpeed = 1.0f; 
 
 	private float currentSpeed;							// Used by the function CalcCurrrentSpeed as a global return value
 	private Vector3 moveDirection = Vector3.zero;		// Direction Vector for character movement. Reset each frame!
+	private Vector3 moveDirectionLast = Vector3.zero;
 
 	// Jumping variables
 	public float jumpSpeed = 8.0F;						// How high the character will jump
@@ -52,7 +54,15 @@ public class my_character_controller : MonoBehaviour
 		// Disabled all movement due to character switch
 		// WIP, as this disables "gravity" too, which is most likely undiserable
 		if (!canMoveStart)
+		{
+			//JustFalling ();
+			// Apply Vector
+			//controller.Move(moveDirection * Time.deltaTime);
 			return;
+		}
+
+
+		moveDirection = Vector3.zero;
 
 			
 		if (movementType == "ClimbMovement" && Input.GetButton ("Jump"))
@@ -60,19 +70,20 @@ public class my_character_controller : MonoBehaviour
 		else
 			NormalMovement ();
 
+		// Apply Vector
+		controller.Move(moveDirection * Time.deltaTime);
+
 	}
 
 
 
 	/**
-	 * HEAVY WIP. DOES NOT REALLY WORK
+	 * Does somewhat work now
 	 */
 	void ClimbMovement()
 	{
 		float horizontal = Input.GetAxis("Horizontal");
 		float vertical = Input.GetAxis ("Vertical");
-
-		moveDirection = Vector3.zero;
 
 		// Raycast from player bottom
 		// If hit, rotate towards the normal of the collider
@@ -119,51 +130,11 @@ public class my_character_controller : MonoBehaviour
 		//moveDirection *= currentSpeed;
 		moveDirection *= 2.0F;
 
-		controller.Move(moveDirection * Time.deltaTime);
-
-
-		/**
-		 * 
-		// Attempt at rotating player correctly by raycasting
-		Vector3 transformBottom = transform.position;
-		transformBottom.y = transformBottom.y - Mathf.Abs(transform.localScale.y);
-		Ray forward = new Ray (transformBottom, transform.forward);
-		RaycastHit hit;
-
-		if(Physics.Raycast (forward, out hit, 100))
-		{
-			Debug.DrawLine (forward.origin, hit.point, Color.red);
-			if(hit.collider.gameObject.tag == "Climbable")
-			{
-				 
-				var targetRotation = Quaternion.LookRotation (-hit.normal);
-				transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2.0F);
-
-
-				//CalcCurrentSpeed ();
-
-				moveDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
-				moveDirection = transform.TransformDirection(moveDirection);
-
-				//moveDirection *= currentSpeed;
-
-				controller.Move(moveDirection * Time.deltaTime);
-
-			}
-		}
-		else{
-			NormalMovement ();
-		}
-		*/
-
-
-
 	}
 
 	// Move player around with WASD and jump with Space
 	void NormalMovement()
 	{
-		moveDirection = new Vector3 (0, 0, 0);
 		// Calculate Speed 
 		CalcCurrentSpeed();
 
@@ -180,7 +151,7 @@ public class my_character_controller : MonoBehaviour
 
 
 		// Apply jumpspeed from last frame for smooth jumping
-		moveDirection.y = lastFrameJumpSpeed;		
+		moveDirection.y = moveDirectionLast.y;		
 
 		// Apply Gravity
 		if (moveDirection.y < maxGravity)
@@ -214,10 +185,26 @@ public class my_character_controller : MonoBehaviour
 
 
 		// Need to remember the jumpspeed for next frame for smooth jumping
-		lastFrameJumpSpeed = moveDirection.y;
+		moveDirectionLast = moveDirection;
 
-		// Apply Vector
-		controller.Move(moveDirection * Time.deltaTime);
+
+	}
+
+	void JustFalling()
+	{
+		moveDirection = moveDirectionLast;
+
+		CalcCurrentSpeed ();
+		moveDirection *= currentSpeed;
+		moveDirection.y = moveDirectionLast.y;
+
+		// Apply Gravity
+		if (moveDirection.y < maxGravity)
+			moveDirection.y -= gravity * Time.deltaTime;
+		else
+			moveDirection.y = maxGravity;
+
+		moveDirectionLast = moveDirection;
 	}
 
 	// Calculates speed for this frame and stores it in global variable
@@ -236,7 +223,7 @@ public class my_character_controller : MonoBehaviour
 		if(movinSideways)
 		{
 			topSpeed = moveSidewaysSpeed;
-			curAccSpeed = 0.0F;
+			curAccSpeed = moveSidewaysAccelerationSpeed;
 		}
 		// If running
 		else if (Input.GetKey (KeyCode.LeftShift))
@@ -284,37 +271,10 @@ public class my_character_controller : MonoBehaviour
 		{
 			print ("Climbing");
 			movementType = "ClimbMovement";
-
-			/**
-			// Finds the point on the collider that is closest to us
-			transform.LookAt (collider.ClosestPointOnBounds (transform.position));
-			Debug.DrawLine (transform.position, collider.ClosestPointOnBounds (transform.position), Color.red, 2, false);
-
-			// As we need only the y rotation
-			Quaternion temp = transform.rotation;
-			temp.eulerAngles = new Vector3 (0, transform.rotation.eulerAngles.y, 0);
-			transform.rotation = temp;
-			*/
 		}
 	}
 
-	/**
-	void OnTriggerStay(Collider collider)
-	{
-		// Climbing
-		if (collider.tag == "Climbable")
-		{
-			// Finds the point on the collider that is closest to us
-			transform.LookAt (collider.ClosestPointOnBounds (transform.position));
-			Debug.DrawLine (transform.position, collider.ClosestPointOnBounds (transform.position), Color.red, 2, false);
 
-			// As we need only the y rotation
-			Quaternion temp = transform.rotation;
-			temp.eulerAngles = new Vector3 (0, transform.rotation.eulerAngles.y, 0);
-			transform.rotation = temp;
-		}
-	}
-	*/
 
 
 	void OnTriggerExit(Collider collider)
