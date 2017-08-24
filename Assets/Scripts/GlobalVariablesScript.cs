@@ -33,13 +33,19 @@ public class GlobalVariablesScript : MonoBehaviour {
 			branchSeedsText.text = bigBranchSeeds.ToString();
 			ivySeedsText.text = bigIvySeeds.ToString();
 		}
+
+
+		if(characterSwitchingScript.together && (smolBranchSeeds > 0 || smolIvySeeds > 0))
+		{
+			handOver ();
+		}
 	}
 
 	public void handOver()
 	{
-		for(; 0 > smolBranchSeeds; smolBranchSeeds--)
+		for(; 0 < smolBranchSeeds; smolBranchSeeds--)
 			bigBranchSeeds++;
-		for(; 0 > smolIvySeeds; smolIvySeeds--)
+		for(; 0 < smolIvySeeds; smolIvySeeds--)
 			bigIvySeeds++;	
 	}
 }

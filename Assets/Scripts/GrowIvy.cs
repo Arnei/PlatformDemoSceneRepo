@@ -42,7 +42,7 @@ public class GrowIvy : MonoBehaviour {
 		float sizeY = growIvyPlane.GetComponent<MeshRenderer> ().bounds.size.y;
 		transform.rotation = tempRot;
 
-		Debug.Log ("SizeY: " + sizeY);
+		//Debug.Log ("SizeY: " + sizeY);
 		growIvyPlane.GetComponent<Renderer>().material.mainTextureScale = new Vector2(sizeX / 2, sizeY / 2);		// The /2 are just magic numbers for styling
 	}
 

@@ -15,9 +15,11 @@ public class Branch : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		
 		// Moves the branch downwards, so that it does not appear IN the player, but under it.
 		// WIP. Needs optimization, as the calculations are not precise. Might be better to use something other than mesh.sharedMesh (maybe MeshRenderer)
 		Transform branchObject = transform.Find("BranchObject");
+		/**
 		MeshFilter mf = branchObject.GetComponent<MeshFilter>();
 		Vector3 objSize = mf.sharedMesh.bounds.size;
 		Vector3 objScale = transform.localScale;
@@ -28,6 +30,7 @@ public class Branch : MonoBehaviour {
 		//Debug.Log ("Old MaxLength: " + maxLength);
 		maxLength = checkForGoal (maxLength, objHeight);
 		//Debug.Log ("New MaxLength: " + maxLength);
+		*/
 
 		// MeshRenderer.bounds returns the size of the axis-aligned bounding box.
 		// This is then used to calculate the corresponding scale value to maxLength.
@@ -52,6 +55,14 @@ public class Branch : MonoBehaviour {
 		}
 	}
 
+	public void setMaxLength(float newMaxLength)
+	{
+		maxLength = newMaxLength;
+	}
+
+
+	/**
+	 * MOVED TO CHARACER ABILITIES
 	// Do 3 Raycasts forward (middle, low, high), find the closest object they hit that is not a branch
 	// maxAcceptableDistance: The biggest distance an object can be away before it is ignored
 	// objHeight: Height of the branch. Used to calc starting position for low/high raycasts
@@ -101,5 +112,5 @@ public class Branch : MonoBehaviour {
 		}
 		return maxAcceptableDistance;
 	}
-
+	*/
 }

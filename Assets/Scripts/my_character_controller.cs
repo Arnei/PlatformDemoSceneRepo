@@ -32,10 +32,12 @@ public class my_character_controller : MonoBehaviour
 	public float continueJumping = 1.0F;				// How long the character can continue to gain height
 	public float gravity = 20.0F;						// How fast the character comes back down
 	public float maxGravity = 20.0F;					// Max Fall Speed
+	public float floatSpeed = -0.5F;
 
 	private float lastFrameJumpSpeed;					// Stores Y-Direction from last frame
 	private bool hasJumped;								// Did we jump just now?
 	private float continueJumpingRemainingTime;			// Counts remaining time to gain height
+	private bool canFloat;
 
 
 	void Start()
@@ -43,6 +45,7 @@ public class my_character_controller : MonoBehaviour
 		controller = GetComponent<CharacterController>();
 		hasJumped = false;
 		continueJumpingRemainingTime = continueJumping;
+		canFloat = false;
 		currentSpeed = 0.0F;
 	}
 
@@ -55,9 +58,17 @@ public class my_character_controller : MonoBehaviour
 		// WIP, as this disables "gravity" too, which is most likely undiserable
 		if (!canMoveStart)
 		{
-			//JustFalling ();
-			// Apply Vector
-			//controller.Move(moveDirection * Time.deltaTime);
+			if(!controller.isGrounded && transform.parent == null)
+			{
+				//JustFalling ();
+				// Apply Vector
+				//transform.Translate(moveDirection * Time.deltaTime);
+			}
+			//else
+			//{
+			//	controller.enabled = false;
+			//}
+
 			return;
 		}
 
@@ -153,20 +164,26 @@ public class my_character_controller : MonoBehaviour
 		// Apply jumpspeed from last frame for smooth jumping
 		moveDirection.y = moveDirectionLast.y;		
 
+
+
 		// Apply Gravity
 		if (moveDirection.y < maxGravity)
 			moveDirection.y -= gravity * Time.deltaTime;
 		else
 			moveDirection.y = maxGravity;
 
+
+
+
 		// Actions only possible when player is grounded
 		if (controller.isGrounded) 
 		{		
 			// Stop Gravity from going to negative infinity while grounded
-			moveDirection.y = 0.0F;
+			// Must set this to a value below 0, or "isGrounded" will fail
+			moveDirection.y = -0.1F;//0.0F;
 
 			// Start Jump
-			if (Input.GetButton ("Jump"))
+			if (Input.GetButtonDown ("Jump"))
 			{
 				moveDirection.y = jumpSpeed;
 				hasJumped = true;
@@ -182,6 +199,15 @@ public class my_character_controller : MonoBehaviour
 			hasJumped = false;
 			continueJumpingRemainingTime = continueJumping;
 		}
+			
+		if (!controller.isGrounded && Input.GetButtonUp ("Jump"))
+			canFloat = true;
+		else if (controller.isGrounded)
+			canFloat = false;
+		if(!controller.isGrounded && canFloat && Input.GetButton("Jump"))
+		{
+			moveDirection.y = floatSpeed;
+		}
 
 
 		// Need to remember the jumpspeed for next frame for smooth jumping
@@ -190,6 +216,7 @@ public class my_character_controller : MonoBehaviour
 
 	}
 
+	// Was intended to be used for making inactive characters fall to the ground
 	void JustFalling()
 	{
 		moveDirection = moveDirectionLast;

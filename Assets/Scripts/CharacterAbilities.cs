@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /**
  * Handles character abilities
@@ -14,6 +15,10 @@ public class CharacterAbilities : MonoBehaviour {
 	public Transform playerSmol;
 	public Transform target;
 	public CharacterSwitching characterSwitchingScript;
+	public GlobalVariablesScript globalVariablesScript;
+	public Image redXImage;
+
+	public float maxLength = 10.0F;		// Maximum Length the branch can have (in unity units)
 
 	public float ivyRaycastDistance = 5.0F;
 
@@ -33,16 +38,32 @@ public class CharacterAbilities : MonoBehaviour {
 	void Update () {
 		// Create branch on "1"
 		// Make sure branch starts in ground by having the player be grounded
-		if(Input.GetKeyDown(KeyCode.Alpha1) && controller.isGrounded)
+		if(Input.GetKeyDown(KeyCode.Alpha1) && controller.isGrounded && globalVariablesScript.bigBranchSeeds > 0)
 		{
-			growBranch ();
+			if(growBranch ())
+				globalVariablesScript.bigBranchSeeds -= 1;
+			else
+				StartCoroutine (showX());
+		}
+		else if(Input.GetKeyDown(KeyCode.Alpha1) && (!controller.isGrounded || globalVariablesScript.bigBranchSeeds <= 0))
+		{
+			StartCoroutine (showX());
 		}
 
-		if(Input.GetKeyDown(KeyCode.Alpha2))
+		// Create Ivy on "2"
+		if(Input.GetKeyDown(KeyCode.Alpha2) && globalVariablesScript.bigIvySeeds > 0)
 		{
-			growIvy ();
+			if(growIvy ())
+				globalVariablesScript.bigIvySeeds -= 1;
+			else
+				StartCoroutine (showX());
+		}
+		else if(Input.GetKeyDown(KeyCode.Alpha2) && globalVariablesScript.bigIvySeeds <= 0)
+		{
+			StartCoroutine (showX());
 		}
 
+		// Throw Smol on "3"
 		if(Input.GetKeyDown(KeyCode.Alpha3) && characterSwitchingScript.together)
 		{
 			throwPlayerSmol ();
@@ -53,31 +74,65 @@ public class CharacterAbilities : MonoBehaviour {
 
 
 	// Instantiate a branch below the player
-	void growBranch()
+	bool growBranch()
 	{
 		Vector3 startPosition = transform.position;
 
-		// Alter startPosition to start at the bottom of the player ('s mesh)
-		MeshFilter mf = GetComponent<MeshFilter>();
-		Vector3 objSize = mf.sharedMesh.bounds.size;
-		Vector3 objScale = transform.localScale;
-		float objHeight = objSize.y * objScale.y; //(*anyparentobject.transform.localScale.y);
-		//float objWidth = objSize.x * objScale.x; //(*parent.transform.localScale.x);
-		startPosition.y = startPosition.y - (objHeight / 2.0F);
+		// Move startPosition to the ground the player is standing on
+		RaycastHit hit;
+		if(Physics.Raycast(transform.position, Vector3.down, out hit))
+		{
+			startPosition.y = hit.point.y;
+		}
+		// If we don't anything something is srsly wrong
+		else
+		{
+			Debug.LogError ("NO GROUND");
+			return false;
+		}
+
 
 		// Goal here is to have player and branch have the same forward
 		Quaternion startRotation = transform.rotation;
 
-		Instantiate (branch, startPosition, startRotation);
+		Transform newBranch = Instantiate (branch, startPosition, startRotation);
+
+		// Moves the branch downwards, so that it does not appear IN the player, but under it.
+		// WIP. Needs optimization, as the calculations are not precise. Might be better to use something other than mesh.sharedMesh (maybe MeshRenderer)
+		Transform branchObject = newBranch.transform.Find("BranchObject");
+		MeshFilter bO_mf = branchObject.GetComponent<MeshFilter>();
+		Vector3 bO_objSize = bO_mf.sharedMesh.bounds.size;
+		Vector3 bO_objScale = newBranch.transform.localScale;
+		float bO_objHeight = bO_objSize.y * bO_objScale.y; 
+		newBranch.transform.position = new Vector3(newBranch.transform.position.x, newBranch.transform.position.y - (bO_objHeight / 4.0F), newBranch.transform.position.z);	// Literally hacked the constant here
+
+		// Check if we wanna grow shorter than maxLength
+		float newMaxLength = checkForGoal (newBranch.transform, maxLength, bO_objHeight);
+		// Can we even grow here?
+		if (newMaxLength >= maxLength)
+		{
+			Debug.Log ("MaxLength reached, overshot by: " + newMaxLength);
+			Destroy (newBranch.gameObject);
+			return false;
+		}
+
+		// Notifiy the branch of how long it should be
+		Branch branchScript = newBranch.GetComponent<Branch> ();
+		branchScript.setMaxLength (newMaxLength);
+
+		return true;
 	}
 
-	void growIvy()
+
+
+
+	bool growIvy()
 	{
 		RaycastHit hit;
-		if(Physics.Raycast(transform.position, transform.forward, out hit, ivyRaycastDistance)){
+		if (Physics.Raycast (transform.position, transform.forward, out hit, ivyRaycastDistance)) {
 
 			if (hit.collider.gameObject.name == "GrowIvyPlane")
-				return;
+				return false;
 			Debug.Log ("Hitname: " + hit.collider.gameObject.name);
 
 			Vector3 startPos = hit.point;
@@ -90,15 +145,21 @@ public class CharacterAbilities : MonoBehaviour {
 
 			Transform newIvy = Instantiate (ivy, startPos, startRot);
 
+			// Face in correct direction
+			newIvy.transform.forward = hit.normal;
+
+			// Put a little in fron so as not to overlap with the object it is "growing" on
 			float verySmallNumber = 0.01F;
 			newIvy.transform.position = newIvy.transform.position + (newIvy.transform.forward * verySmallNumber);
 
-			GrowIvy growIvyScript = newIvy.GetComponent<GrowIvy> ();
 
+			GrowIvy growIvyScript = newIvy.GetComponent<GrowIvy> ();
 
 			growIvyScript.setRaycastHit (hitBounds);
 			hit.collider.gameObject.transform.rotation = tempRot;
-		}
+			return true;
+		} else
+			return false;
 	}
 
 	void throwPlayerSmol()
@@ -156,4 +217,76 @@ public class CharacterAbilities : MonoBehaviour {
 		}
 	}   
 
+	// Display Red X when an action is not possible (For whatever reason)
+	IEnumerator showX()
+	{
+		Color c;
+		for (int i = 1; i > 0; i--)
+		{
+			redXImage.enabled = true;
+			yield return new WaitForSeconds (0.5F);
+		}
+		for (float f = 1.0F; f > 0.0F; f -= 0.1F)
+		{
+			c = redXImage.color;
+			c.a = f;
+			redXImage.color = c;
+			yield return new WaitForSeconds (0.1F);
+		}
+		c = redXImage.color;
+		c.a = 1.0F;
+		redXImage.color = c;
+		redXImage.enabled = false;
+	}
+
+	// Do 3 Raycasts forward (middle, low, high), find the closest object they hit that is not a branch
+	// maxAcceptableDistance: The biggest distance an object can be away before it is ignored
+	// objHeight: Height of the branch. Used to calc starting position for low/high raycasts
+	// Return: Distance to closest object that is not a branch
+	float checkForGoal(Transform startTransform, float maxAcceptableDistance, float objHeight)
+	{
+		
+		RaycastHit[] hits_middle, hits_low, hits_high;
+
+		hits_middle = Physics.RaycastAll (startTransform.position, startTransform.forward, maxAcceptableDistance);
+		//Debug.DrawLine (transform.position, (transform.position + transform.forward * maxLength), Color.red);
+		maxAcceptableDistance = shortestDistanceInHits(hits_middle, maxAcceptableDistance);
+
+		Vector3 low = new Vector3 (startTransform.position.x, startTransform.position.y - (objHeight / 4.0F) + 0.01F, startTransform.position.z);
+		hits_low = Physics.RaycastAll(low, startTransform.forward, maxAcceptableDistance);
+		//Debug.DrawLine (low, (low + transform.forward * maxLength), Color.red);
+		maxAcceptableDistance = shortestDistanceInHits(hits_low, maxAcceptableDistance);
+
+
+		Vector3 high = new Vector3 (startTransform.position.x, startTransform.position.y + (objHeight / 4.0F) - 0.01F, startTransform.position.z);	// Small correction so as to not miss the ground
+		hits_high = Physics.RaycastAll(high, startTransform.forward, maxAcceptableDistance);
+		//Debug.DrawLine (high, (high + transform.forward * maxLength), Color.red);
+		maxAcceptableDistance = shortestDistanceInHits(hits_high, maxAcceptableDistance);
+
+
+		return maxAcceptableDistance;
+	}
+
+	// Helper function to checkForGoal. Iterates over the hit results.
+	// hits: The hits from the respective raycast.
+	// maxAcceptableDistance: Current maximum distance
+	// Return: New maximum distance
+	float shortestDistanceInHits(RaycastHit[] hits, float maxAcceptableDistance)
+	{
+		for (int i=0; i < hits.Length; i++)
+		{
+			//Debug.Log ("Hits: " + hits[i].collider.gameObject.name);
+			// Ignore other Branches. Because they are child objects, the raycasts will collide with them,
+			// effectivly stopping growth.
+			if (hits [i].collider.gameObject.name == "BranchObject")
+				continue;
+			if (hits [i].distance < maxAcceptableDistance)
+			{
+				maxAcceptableDistance = hits [i].distance;
+				//Debug.Log ("New shortest distance: " + hits [i].collider.gameObject.name);
+			}
+
+		}
+		return maxAcceptableDistance;
+	}
 }
