@@ -86,16 +86,15 @@ public class MouseCamera : MonoBehaviour {
 			x += Input.GetAxis("Mouse X") * mouseXSpeedMod;
 			y += Input.GetAxis("Mouse Y") * mouseYSpeedMod;
 		//}
-		/**
 		// Blocks rotating around x axis while moving
 		// Supposedly used with "else if" with the above if statement
-		if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
-		{
-			float targetRotationAngle = CameraTarget.eulerAngles.y;
-			float cameraRotationAngle = transform.eulerAngles.y;
-			x = Mathf.LerpAngle(cameraRotationAngle,targetRotationAngle, lerpRate * Time.deltaTime);
-		}
-		*/
+		//if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+		//{
+		//	float targetRotationAngle = CameraTarget.eulerAngles.y;
+		//	float cameraRotationAngle = transform.eulerAngles.y;
+		//	x = Mathf.LerpAngle(cameraRotationAngle,targetRotationAngle, lerpRate * Time.deltaTime);
+		//}
+
 		y = ClampAngle (y, -15, 25);
 		Quaternion rotation = Quaternion.Euler (y,x,0);
 
@@ -120,7 +119,7 @@ public class MouseCamera : MonoBehaviour {
 			}
 		}
 
-			
+
 
 		currentDistance = !isCorrected || correctedDistance > currentDistance ? Mathf.Lerp(currentDistance,correctedDistance,Time.deltaTime * ZoomRate) : correctedDistance;
 
@@ -135,8 +134,8 @@ public class MouseCamera : MonoBehaviour {
 		//checks if right mouse button is pushed
 		//if(Input.GetMouseButton(1))
 		//{
-			//sets CHARACTERS x rotation to match cameras x rotation
-			CameraTarget.eulerAngles = new Vector3(cameraX,transform.eulerAngles.y,transform.eulerAngles.z);
+		//sets CHARACTERS x rotation to match cameras x rotation
+		CameraTarget.eulerAngles = new Vector3(cameraX,transform.eulerAngles.y,transform.eulerAngles.z);
 		//}
 		//checks if middle mouse button is pushed down
 		if(Input.GetMouseButtonDown(2))
@@ -157,6 +156,8 @@ public class MouseCamera : MonoBehaviour {
 		}
 
 	}
+
+
 
 	private static float ClampAngle(float angle, float min, float max)
 	{
