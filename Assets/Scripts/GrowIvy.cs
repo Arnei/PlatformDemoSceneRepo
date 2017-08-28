@@ -24,7 +24,25 @@ public class GrowIvy : MonoBehaviour {
 		Quaternion tempRot = transform.rotation;
 		transform.rotation = Quaternion.identity;
 		float sizeY = growIvyPlane.GetComponent<MeshRenderer> ().bounds.size.y;
+		float sizeX = growIvyPlane.GetComponent<MeshRenderer> ().bounds.size.x;
 		transform.rotation = tempRot;
+
+		// Check for obstacles that should stop ivy growth
+		RaycastHit hit;
+		Ray upRayLeft = new Ray(transform.position + (transform.right * (sizeX / 2))+ (transform.forward * 0.05F) + (transform.up *0.1F) , transform.up);
+		if(Physics.Raycast(upRayLeft, out hit, distanceTopBottom))
+		{
+			Debug.Log ("Ivy Hit Distance: " + hit.distance + " Hitname: " + hit.collider.gameObject.name);
+			distanceTopBottom = hit.distance;
+		}
+		Ray upRayRight = new Ray(transform.position + (-transform.right * (sizeX / 2))+ (transform.forward * 0.05F) + (transform.up *0.1F) , transform.up);
+		if(Physics.Raycast(upRayRight, out hit, distanceTopBottom))
+		{
+			Debug.Log ("Ivy Hit Distance: " + hit.distance + " Hitname: " + hit.collider.gameObject.name);
+			distanceTopBottom = hit.distance;
+		}
+
+
 
 		rescale = transform.localScale;
 		rescale.y = distanceTopBottom * transform.localScale.y / sizeY;

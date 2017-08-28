@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Goal : MonoBehaviour {
 
 	public string sceneName;
+	public bool triggerVictoryMessage;
+	public Image victoryImage;
 
 	public float colorLerpTime = 3.0F;
 	public float colorLerpSmoothness = 0.2F;
 
-	public bool playerBigHasEntered;
-	public bool playerSmolHasEntered;
+	private bool playerBigHasEntered;
+	private bool playerSmolHasEntered;
 	private bool flowersGrey;
 
 	private Renderer myRenderer;
@@ -36,6 +39,8 @@ public class Goal : MonoBehaviour {
 				StartCoroutine (LerpColor (myRenderer, startColor, endColor));
 			if (myRenderer.material.color == endColor)
 				flowersGrey = false;
+			if (triggerVictoryMessage)
+				victoryImage.enabled = true;
 			if (Input.GetKeyDown (KeyCode.Return))
 				SceneManager.LoadScene (sceneName);
 		}

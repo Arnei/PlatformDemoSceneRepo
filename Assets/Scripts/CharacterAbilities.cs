@@ -98,7 +98,6 @@ public class CharacterAbilities : MonoBehaviour {
 		Transform newBranch = Instantiate (branch, startPosition, startRotation);
 
 		// Moves the branch downwards, so that it does not appear IN the player, but under it.
-		// WIP. Needs optimization, as the calculations are not precise. Might be better to use something other than mesh.sharedMesh (maybe MeshRenderer)
 		Transform branchObject = newBranch.transform.Find("BranchObject");
 		MeshFilter bO_mf = branchObject.GetComponent<MeshFilter>();
 		Vector3 bO_objSize = bO_mf.sharedMesh.bounds.size;
@@ -133,7 +132,7 @@ public class CharacterAbilities : MonoBehaviour {
 
 			if (hit.collider.gameObject.name == "GrowIvyPlane")
 				return false;
-			Debug.Log ("Hitname: " + hit.collider.gameObject.name);
+			//Debug.Log ("Hitname: " + hit.collider.gameObject.name);
 
 			Vector3 startPos = hit.point;
 			Quaternion startRot = hit.collider.gameObject.transform.rotation;

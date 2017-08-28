@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 64391045711164602}
   - component: {fileID: 23732591515832826}
   - component: {fileID: 65930493949768776}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: GrowIvyPlane
   m_TagString: Climbable
   m_Icon: {fileID: 0}
