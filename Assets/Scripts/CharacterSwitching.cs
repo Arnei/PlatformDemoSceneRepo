@@ -17,7 +17,7 @@ public class CharacterSwitching : MonoBehaviour {
 	private my_character_controller PlayerBigScript;
 	private my_character_controller PlayerSmolScript;
 
-	private CharacterController PlayerBigController;
+	//private CharacterController PlayerBigController;
 	private CharacterController PlayerSmolController;
 
 	private MouseCamera PlayerBigCameraScript;
@@ -29,7 +29,7 @@ public class CharacterSwitching : MonoBehaviour {
 	void Start () {
 		PlayerBigScript = PlayerBig.GetComponent<my_character_controller> ();
 		PlayerSmolScript = PlayerSmol.GetComponent<my_character_controller> ();
-		PlayerBigController = PlayerBig.GetComponent<CharacterController> ();
+		//PlayerBigController = PlayerBig.GetComponent<CharacterController> ();
 		PlayerSmolController = PlayerSmol.GetComponent<CharacterController> ();
 		PlayerBigCameraScript = PlayerBigCamera.GetComponent<MouseCamera> ();
 		PlayerSmolCameraScript = PlayerSmolCamera.GetComponent<MouseCamera> ();

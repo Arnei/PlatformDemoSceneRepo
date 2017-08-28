@@ -55,21 +55,14 @@ public class my_character_controller : MonoBehaviour
 		if (!canMoveText)
 			return;
 		// Disabled all movement due to character switch
-		// WIP, as this disables "gravity" too, which is most likely undiserable
+		// Also make character fall to the ground if in the air
 		if (!canMoveStart)
 		{
 			if(transform.parent == null)
 			{
 				JustFalling ();
 				controller.Move(moveDirection * Time.deltaTime);
-				// Apply Vector
-				//transform.Translate(moveDirection * Time.deltaTime);
 			}
-			//else
-			//{
-			//	controller.enabled = false;
-			//}
-
 			return;
 		}
 
@@ -217,7 +210,7 @@ public class my_character_controller : MonoBehaviour
 
 	}
 
-	// Was intended to be used for making inactive characters fall to the ground
+	// Intended to be used for making inactive characters fall to the ground
 	void JustFalling()
 	{
 		moveDirection = moveDirectionLast;
@@ -237,6 +230,7 @@ public class my_character_controller : MonoBehaviour
 			// Stop Gravity from going to negative infinity while grounded
 			// Must set this to a value below 0, or "isGrounded" will fail
 			moveDirection.y = -0.1F;//0.0F;
+			// Stop Character from continuing to move horizontally
 			moveDirection.x = 0.0F;
 			moveDirection.z = 0.0F;
 		}

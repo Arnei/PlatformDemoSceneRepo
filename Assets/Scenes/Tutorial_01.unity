@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4475795, g: 0.4944877, b: 0.5630411, a: 1}
+  m_IndirectSpecularColor: {r: 0.44754362, g: 0.4944951, b: 0.5630208, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -880,11 +880,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 19
       objectReference: {fileID: 0}
-    - target: {fileID: 23324458883614200, guid: ab69caa6cd8f5bd4d85d6fb82256ad65,
+    - target: {fileID: 114553268989050586, guid: ab69caa6cd8f5bd4d85d6fb82256ad65,
         type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
+      propertyPath: characterSwitchingScript
+      value: 
+      objectReference: {fileID: 858150915}
     - target: {fileID: 114553268989050586, guid: ab69caa6cd8f5bd4d85d6fb82256ad65,
         type: 2}
       propertyPath: globalVariablesScript
@@ -895,42 +895,7 @@ Prefab:
       propertyPath: redXImage
       value: 
       objectReference: {fileID: 2051918673}
-    - target: {fileID: 114553268989050586, guid: ab69caa6cd8f5bd4d85d6fb82256ad65,
-        type: 2}
-      propertyPath: characterSwitchingScript
-      value: 
-      objectReference: {fileID: 858150915}
-    - target: {fileID: 4852705498030120, guid: ab69caa6cd8f5bd4d85d6fb82256ad65, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114277826452717474, guid: ab69caa6cd8f5bd4d85d6fb82256ad65,
-        type: 2}
-      propertyPath: speed
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 114277826452717474, guid: ab69caa6cd8f5bd4d85d6fb82256ad65,
-        type: 2}
-      propertyPath: runSpeed
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 114277826452717474, guid: ab69caa6cd8f5bd4d85d6fb82256ad65,
-        type: 2}
-      propertyPath: moveSidewaysSpeed
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 114277826452717474, guid: ab69caa6cd8f5bd4d85d6fb82256ad65,
-        type: 2}
-      propertyPath: jumpSpeed
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 114277826452717474, guid: ab69caa6cd8f5bd4d85d6fb82256ad65,
-        type: 2}
-      propertyPath: maxGravity
-      value: 30
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 64313366361080750, guid: ab69caa6cd8f5bd4d85d6fb82256ad65, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ab69caa6cd8f5bd4d85d6fb82256ad65, type: 2}
   m_IsPrefabParent: 0
 --- !u!4 &317200465 stripped
