@@ -20,6 +20,9 @@ public class CharacterSwitching : MonoBehaviour {
 	private CharacterController PlayerBigController;
 	private CharacterController PlayerSmolController;
 
+	private MouseCamera PlayerBigCameraScript;
+	private MouseCamera PlayerSmolCameraScript;
+
 	private Vector3 anchorPos;
 
 	// Use this for initialization
@@ -28,6 +31,8 @@ public class CharacterSwitching : MonoBehaviour {
 		PlayerSmolScript = PlayerSmol.GetComponent<my_character_controller> ();
 		PlayerBigController = PlayerBig.GetComponent<CharacterController> ();
 		PlayerSmolController = PlayerSmol.GetComponent<CharacterController> ();
+		PlayerBigCameraScript = PlayerBigCamera.GetComponent<MouseCamera> ();
+		PlayerSmolCameraScript = PlayerSmolCamera.GetComponent<MouseCamera> ();
 		anchorPos = PlayerBig.transform.position - PlayerSmol.transform.position;
 	}
 	
@@ -109,12 +114,14 @@ public class CharacterSwitching : MonoBehaviour {
 	public void detach()
 	{
 		PlayerSmol.transform.parent = null;
+		PlayerSmolController.enabled = true;
 	}
 
 	void retach()
 	{
 		PlayerSmol.transform.parent = PlayerBig.transform;
 		PlayerSmol.transform.position = PlayerBig.transform.position - anchorPos;
+		PlayerSmolController.enabled = false;
 	}
 
 	// Make necessary enables and disables
@@ -123,22 +130,26 @@ public class CharacterSwitching : MonoBehaviour {
 	{
 		PlayerBigCamera.enabled = false;
 		PlayerBigScript.canMoveStart = false;
-		PlayerBigController.enabled = false;
+		//PlayerBigController.enabled = false;
+		PlayerBigCameraScript.enabled = false;
 
 		PlayerSmolCamera.enabled = true;
 		PlayerSmolScript.canMoveStart = true;
-		PlayerSmolController.enabled = true;
+		//PlayerSmolController.enabled = true;
+		PlayerSmolCameraScript.enabled = true;
 	}
 
 	void switchToBig()
 	{
 		PlayerSmolCamera.enabled = false;
 		PlayerSmolScript.canMoveStart = false;
-		PlayerSmolController.enabled = false;
+		//PlayerSmolController.enabled = false;
+		PlayerSmolCameraScript.enabled = false;
 
 		PlayerBigCamera.enabled = true;
 		PlayerBigScript.canMoveStart = true;
-		PlayerBigController.enabled = true;
+		//PlayerBigController.enabled = true;
+		PlayerBigCameraScript.enabled = true;
 	}
 		
 

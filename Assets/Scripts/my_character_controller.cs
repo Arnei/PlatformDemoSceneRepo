@@ -58,9 +58,10 @@ public class my_character_controller : MonoBehaviour
 		// WIP, as this disables "gravity" too, which is most likely undiserable
 		if (!canMoveStart)
 		{
-			if(!controller.isGrounded && transform.parent == null)
+			if(transform.parent == null)
 			{
-				//JustFalling ();
+				JustFalling ();
+				controller.Move(moveDirection * Time.deltaTime);
 				// Apply Vector
 				//transform.Translate(moveDirection * Time.deltaTime);
 			}
@@ -221,8 +222,8 @@ public class my_character_controller : MonoBehaviour
 	{
 		moveDirection = moveDirectionLast;
 
-		CalcCurrentSpeed ();
-		moveDirection *= currentSpeed;
+		//CalcCurrentSpeed ();
+		//moveDirection *= currentSpeed;
 		moveDirection.y = moveDirectionLast.y;
 
 		// Apply Gravity
@@ -230,6 +231,15 @@ public class my_character_controller : MonoBehaviour
 			moveDirection.y -= gravity * Time.deltaTime;
 		else
 			moveDirection.y = maxGravity;
+
+		if (controller.isGrounded) 
+		{		
+			// Stop Gravity from going to negative infinity while grounded
+			// Must set this to a value below 0, or "isGrounded" will fail
+			moveDirection.y = -0.1F;//0.0F;
+			moveDirection.x = 0.0F;
+			moveDirection.z = 0.0F;
+		}
 
 		moveDirectionLast = moveDirection;
 	}
