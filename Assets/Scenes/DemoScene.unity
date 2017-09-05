@@ -5929,6 +5929,10 @@ Prefab:
       propertyPath: redXImage
       value: 
       objectReference: {fileID: 398933349}
+    - target: {fileID: 1409452142460292, guid: ab69caa6cd8f5bd4d85d6fb82256ad65, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ab69caa6cd8f5bd4d85d6fb82256ad65, type: 2}
   m_IsPrefabParent: 0
