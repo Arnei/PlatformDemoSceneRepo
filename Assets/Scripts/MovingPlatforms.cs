@@ -11,14 +11,16 @@ public class MovingPlatforms : MonoBehaviour {
 	public Transform movingPlatform;
 	public Transform position1;
 	public Transform position2;
-	public Vector3 newPosition;		// Current goal position (either position1 or position2)
-	public string currentState;		// To which position platform is currently going
+	private Vector3 newPosition;		// Current goal position (either position1 or position2)
+	private string currentState;		// To which position platform is currently going
 	public float smooth;			// How fast the platform will move
 	public float resetTime;			// After how many seconds the platform will change directions
 
 
 	// Use this for initialization
 	void Start () {
+		newPosition = new Vector3 (0, 0, 0);
+		currentState = "";
 		ChangeTarget ();
 	}
 	

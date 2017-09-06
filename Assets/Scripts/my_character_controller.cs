@@ -12,6 +12,7 @@ public class my_character_controller : MonoBehaviour
 	public bool canMoveText = true;						// Used by TextBoxManager
 	public string movementType = "NormalMovement";		// To switch between diffrent movement options. Currently there is only NormalMovement and ClimbMovement
 	public bool horizontalMoveSideways = false;
+	public bool canFloat = true;
 
 	// Moving variables
 	public float speed = 6.0F;							// Standard Max Character Speed
@@ -37,7 +38,7 @@ public class my_character_controller : MonoBehaviour
 	private float lastFrameJumpSpeed;					// Stores Y-Direction from last frame
 	private bool hasJumped;								// Did we jump just now?
 	private float continueJumpingRemainingTime;			// Counts remaining time to gain height
-	private bool canFloat;
+	private bool possibleToFloat;
 
 
 	void Start()
@@ -45,7 +46,7 @@ public class my_character_controller : MonoBehaviour
 		controller = GetComponent<CharacterController>();
 		hasJumped = false;
 		continueJumpingRemainingTime = continueJumping;
-		canFloat = false;
+		possibleToFloat = false;
 		currentSpeed = 0.0F;
 	}
 
@@ -193,15 +194,19 @@ public class my_character_controller : MonoBehaviour
 			hasJumped = false;
 			continueJumpingRemainingTime = continueJumping;
 		}
-			
-		if (!controller.isGrounded && Input.GetButtonUp ("Jump"))
-			canFloat = true;
-		else if (controller.isGrounded)
-			canFloat = false;
-		if(!controller.isGrounded && canFloat && Input.GetButton("Jump"))
+
+		if(canFloat)
 		{
-			moveDirection.y = floatSpeed;
+			if (!controller.isGrounded && Input.GetButtonUp ("Jump"))
+				possibleToFloat = true;
+			else if (controller.isGrounded)
+				possibleToFloat = false;
+			if(!controller.isGrounded && possibleToFloat && Input.GetButton("Jump"))
+			{
+				moveDirection.y = floatSpeed;
+			}
 		}
+
 
 
 		// Need to remember the jumpspeed for next frame for smooth jumping
@@ -291,12 +296,6 @@ public class my_character_controller : MonoBehaviour
 
 	void OnTriggerEnter(Collider collider)
 	{
-		// Teleport back to start
-		if(collider.gameObject.name == "ResetPlayer")
-		{
-			transform.position = new Vector3 (1, 1, 1);
-		}
-
 		// Climbing
 		if (collider.tag == "Climbable")
 		{

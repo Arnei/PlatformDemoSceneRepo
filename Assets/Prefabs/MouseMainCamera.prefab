@@ -107,6 +107,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CameraTarget: {fileID: 0}
+  mouseXSpeedMod: 5
+  mouseYSpeedMod: 5
+  clampMin: -25
+  clampMax: 35
   MaxViewDistance: 15
   MinViewDistance: 1
   ZoomRate: 20

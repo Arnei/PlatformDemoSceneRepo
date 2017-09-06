@@ -52,8 +52,11 @@ public class MouseCamera : MonoBehaviour {
 	private float x = 0.0f;
 	private float y = 0.0f;
 
-	private int mouseXSpeedMod = 5;
-	private int mouseYSpeedMod = 5;
+	public int mouseXSpeedMod = 5;
+	public int mouseYSpeedMod = 5;
+
+	public float clampMin = -15F;
+	public float clampMax = 25F;
 
 	public float MaxViewDistance = 15f;
 	public float MinViewDistance = 1f;
@@ -84,7 +87,7 @@ public class MouseCamera : MonoBehaviour {
 	void LateUpdate () {
 		//if (Input.GetMouseButton (1)) {/*0 mouse btn left, 1 mouse btn right*/
 			x += Input.GetAxis("Mouse X") * mouseXSpeedMod;
-			y += Input.GetAxis("Mouse Y") * mouseYSpeedMod;
+			y -= Input.GetAxis("Mouse Y") * mouseYSpeedMod;
 		//}
 		// Blocks rotating around x axis while moving
 		// Supposedly used with "else if" with the above if statement
@@ -95,7 +98,7 @@ public class MouseCamera : MonoBehaviour {
 		//	x = Mathf.LerpAngle(cameraRotationAngle,targetRotationAngle, lerpRate * Time.deltaTime);
 		//}
 
-		y = ClampAngle (y, -15, 25);
+		y = ClampAngle (y, clampMin, clampMax);
 		Quaternion rotation = Quaternion.Euler (y,x,0);
 
 		desireDistance -= Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * ZoomRate * Mathf.Abs(desireDistance);
