@@ -271,6 +271,16 @@ Prefab:
       propertyPath: ivySeedsText
       value: 
       objectReference: {fileID: 1569896381}
+    - target: {fileID: 114601347745769052, guid: 9adb2e1a8b4d0704282ef155d47988a0,
+        type: 2}
+      propertyPath: bigBranchSeeds
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114601347745769052, guid: 9adb2e1a8b4d0704282ef155d47988a0,
+        type: 2}
+      propertyPath: bigIvySeeds
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9adb2e1a8b4d0704282ef155d47988a0, type: 2}
   m_IsPrefabParent: 0

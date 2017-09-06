@@ -13,6 +13,7 @@ public class my_character_controller : MonoBehaviour
 	public string movementType = "NormalMovement";		// To switch between diffrent movement options. Currently there is only NormalMovement and ClimbMovement
 	public bool horizontalMoveSideways = false;
 	public bool canFloat = true;
+	public bool canClimb = true;
 
 	// Moving variables
 	public float speed = 6.0F;							// Standard Max Character Speed
@@ -71,7 +72,7 @@ public class my_character_controller : MonoBehaviour
 		moveDirection = Vector3.zero;
 
 			
-		if (movementType == "ClimbMovement" && Input.GetButton ("Jump"))
+		if (movementType == "ClimbMovement" && Input.GetButton ("Jump") && canClimb)
 			ClimbMovement ();
 		else
 			NormalMovement ();
